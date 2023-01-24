@@ -1757,6 +1757,27 @@ mlir.register_lowering(
 
 mlir.register_lowering(svd_p, _svd_tpu_lowering_rule)
 
+
+banded_solve_p = Primitive('banded_solve')
+
+def banded_solve(l_and_u: Tuple[int, int], ab: Array, b: Array):
+  if ab.shape[-1] != b.shape[0]:
+    raise ValueError('ab and b must be compatible.')
+  (n_lower, n_upper) = l_and_u
+  if n_lower + n_upper + 1 != ab.shape[0]:
+    raise ValueError("invalid values for the number of lower and upper "
+                         "diagonals: l+u+1 (%d) does not equal ab.shape[0] "
+                         "(%d)" % (n_lower + n_upper + 1, ab.shape[0]))
+  if ab.shape[-1] == 1:
+    # TODO: Implement simple case
+    return jnp.zeros(ab.shape[-1])
+  if n_lower == n_upper == 1:
+    # TODO: Implement reuse tridiagonal primitive
+    return jnp.zeros(ab.shape[-1])
+  else:
+    # TODO: Implement general case
+    return jnp.zeros(ab.shape[-1])
+
 def _tridiagonal_solve_gpu_lowering(lowering, ctx, dl, d, du, b, *, m, n, ldb, t):
   return [lowering(dl, d, du, b, m=m, n=n, ldb=ldb,
                    t=dtypes.canonicalize_dtype(t))]

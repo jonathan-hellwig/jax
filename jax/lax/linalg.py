@@ -13,6 +13,8 @@
 # limitations under the License.
 
 from jax._src.lax.linalg import (
+  banded_solve,
+  banded_solve_p,
   cholesky,
   cholesky_p,
   eig,
